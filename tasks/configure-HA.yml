@@ -27,31 +27,31 @@
 
 - block:
   - name: Waiting for microk8s to be ready on microk8s host master
-    command: "/snap/bin/microk8s.status --wait-ready"
+    command: "microk8s.status --wait-ready"
     delegate_to: "{{ designated_host }}"
     delegate_facts: true
     changed_when: false
 
   - name: Get the microk8s join command from the microk8s master
-    shell: "/snap/bin/microk8s add-node | grep -E -m1 'microk8s join {{ microk8s_ip_regex_HA }}'"
+    shell: "microk8s add-node | grep -E -m1 'microk8s join {{ microk8s_ip_regex_HA }}'"
     delegate_to: "{{ designated_host }}"
     delegate_facts: true
     changed_when: false
     register: microk8s_join_command
 
   - name: Get microk8s cluster nodes
-    command: "/snap/bin/microk8s kubectl get node"
+    command: "microk8s kubectl get node"
     delegate_to: "{{ designated_host }}"
     delegate_facts: true
     changed_when: false
     register: microk8s_cluster_node
 
   - name: Waiting for microk8s to be ready on microk8s host node
-    command: "/snap/bin/microk8s status --wait-ready"
+    command: "microk8s status --wait-ready"
     changed_when: false
 
   - name: Set the microk8s join command on the microk8s node
-    command: "/snap/bin/{{ microk8s_join_command.stdout }}"
+    command: "{{ microk8s_join_command.stdout }}"
     when: microk8s_cluster_node.stdout.find(inventory_hostname) == -1
     register: join_command_output
     failed_when:
