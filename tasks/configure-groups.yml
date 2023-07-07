@@ -1,6 +1,7 @@
 # add user specific settings
 ---
 - name: add user to group
+  become: yes
   command: "usermod -a -G microk8s {{ user }}"
   changed_when: true
   with_items: '{{ users }}'
