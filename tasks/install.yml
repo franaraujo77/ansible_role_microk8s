@@ -32,6 +32,10 @@
     classic: yes
     channel: "{{ microk8s_version }}"
 
+- name: configure users
+  include_tasks: configure-groups.yml
+  when: "users is defined and users not in ([], None, '', omit)"
+
 - name: Wait for microk8s to be ready
   command: microk8s.status --wait-ready
   changed_when: false

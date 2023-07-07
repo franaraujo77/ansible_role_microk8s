@@ -1,14 +1,5 @@
 ---
-
-- name: prepare users
-  include_tasks: configure-prepare-users.yml
-  when: "users is defined and users not in ([], None, '', omit)"
-
 - import_tasks: install.yml
-
-- name: configure users
-  include_tasks: configure-groups.yml
-  when: "users is defined and users not in ([], None, '', omit)"
 
 - name: configure single node addons
   include_tasks: addons.yml
