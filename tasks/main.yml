@@ -1,5 +1,6 @@
 ---
 - name: Add another bin dir to system-wide $PATH.
+  become: true
   copy:
     dest: /etc/profile.d/custom-path.sh
     content: 'PATH=$PATH:/snap/bin'
