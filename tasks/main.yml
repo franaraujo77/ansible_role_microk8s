@@ -1,4 +1,9 @@
 ---
+
+- name: prepare users
+  include_tasks: configure-prepare-users.yml
+  when: "users is defined and users not in ([], None, '', omit)"
+
 - import_tasks: install.yml
 
 - name: configure users

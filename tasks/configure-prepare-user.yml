@@ -1,0 +1,36 @@
+# add user specific settings
+---
+- name: add user to group
+  command: "usermod -a -G microk8s {{ user }}"
+  changed_when: true
+  with_items: '{{ users }}'
+  loop_control:
+    loop_var: user
+    label: '{{ user }}'
+
+- name: Create .kube folder for the user
+  become_user: '{{ user }}'
+  file:
+    path: ~/.kube
+    state: directory
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    mode: 0750
+  with_items: '{{ users }}'
+  loop_control:
+    loop_var: user
+    label: '{{ user }}'
+
+- name: reaffirm permission on files
+  become: yes
+  file:
+    path: ~/.kube
+    state: directory
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    recurse: yes
+    mode: 0750
+  with_items: '{{ users }}'
+  loop_control:
+    loop_var: user
+    label: '{{ user }}'
