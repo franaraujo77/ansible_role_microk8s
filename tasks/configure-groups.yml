@@ -22,9 +22,7 @@
 
 - name: create kubectl config
   changed_when: true
-  shell: microk8s.config > /home/{{ ansible_user }}/.kube/config
-  args:
-    executable: /bin/bash
+  command: microk8s config > /home/{{ ansible_user }}/.kube/config
   loop_control:
     loop_var: user
     label: '{{ ansible_user }}'
@@ -43,9 +41,7 @@
     label: '{{ ansible_user }}'
 
 - name: add helm repository to user
-  shell: "helm repo add {{ item.1.name }} {{ item.1.url }}"
-  args:
-    executable: /bin/bash
+  command: "helm repo add {{ item.1.name }} {{ item.1.url }}"
   changed_when: true
   with_nested:
     - "{{ ansible_user }}"
@@ -53,9 +49,7 @@
   when: microk8s_plugins.helm3
 
 - name: update helm repos
-  shell: "helm repo update"
-  args:
-    executable: /bin/bash
+  command: "helm repo update"
   changed_when: true
   loop_control:
     loop_var: user
