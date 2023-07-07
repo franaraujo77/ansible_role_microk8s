@@ -2,69 +2,62 @@
 ---
 - name: add user to group
   become: yes
-  command: "usermod -a -G microk8s {{ user }}"
+  command: "usermod -a -G microk8s {{ ansible_user }}"
   changed_when: true
-  with_items: '{{ users }}'
   loop_control:
     loop_var: user
-    label: '{{ user }}'
+    label: '{{ ansible_user }}'
 
 - name: Create .kube folder for the user
-  become_user: '{{ user }}'
+  become_user: '{{ ansible_user }}'
   file:
     path: ~/.kube
     state: directory
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
     mode: 0750
-  with_items: '{{ users }}'
   loop_control:
     loop_var: user
-    label: '{{ user }}'
+    label: '{{ ansible_user }}'
 
 - name: create kubectl config
   changed_when: true
-  shell: microk8s config > /home/{{ user }}/.kube/config
+  shell: microk8s config > /home/{{ ansible_user }}/.kube/config
   args:
     executable: /bin/bash
-  with_items: '{{ users }}'
   loop_control:
     loop_var: user
-    label: '{{ user }}'
+    label: '{{ ansible_user }}'
 
 - name: reaffirm permission on files
   become: yes
   file:
     path: ~/.kube
     state: directory
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
     recurse: yes
     mode: 0750
-  with_items: '{{ users }}'
   loop_control:
     loop_var: user
-    label: '{{ user }}'
+    label: '{{ ansible_user }}'
 
 - name: add helm repository to user
-  become_user: '{{ item.0 }}'
   shell: "helm repo add {{ item.1.name }} {{ item.1.url }}"
   args:
     executable: /bin/bash
   changed_when: true
   with_nested:
-    - "{{ users }}"
+    - "{{ ansible_user }}"
     - "{{ helm3_repositories }}"
   when: microk8s_plugins.helm3
 
 - name: update helm repos
-  become_user: '{{ user }}'
   shell: "helm repo update"
   args:
     executable: /bin/bash
   changed_when: true
-  with_items: '{{ users }}'
   loop_control:
     loop_var: user
-    label: '{{ user }}'
+    label: '{{ ansible_user }}'
   when: microk8s_plugins.helm3
