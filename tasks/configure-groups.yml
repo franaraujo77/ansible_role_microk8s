@@ -22,7 +22,7 @@
 
 - name: create kubectl config
   changed_when: true
-  command: "microk8s config > /home/{{ ansible_user }}/.kube/config"
+  command: "microk8s.config > /home/{{ ansible_user }}/.kube/config"
   loop_control:
     loop_var: user
     label: '{{ ansible_user }}'
