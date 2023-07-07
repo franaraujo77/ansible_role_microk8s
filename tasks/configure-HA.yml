@@ -51,7 +51,7 @@
     changed_when: false
 
   - name: Set the microk8s join command on the microk8s node
-    command: "{{ microk8s_join_command.stdout }}"
+    command: "/snap/bin/{{ microk8s_join_command.stdout }}"
     when: microk8s_cluster_node.stdout.find(inventory_hostname) == -1
     register: join_command_output
     failed_when:
