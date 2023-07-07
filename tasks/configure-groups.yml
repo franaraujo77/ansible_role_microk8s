@@ -1,7 +1,6 @@
 # add user specific settings
 ---
 - name: add user to group
-  become: yes
   command: "usermod -a -G microk8s {{ user }}"
   changed_when: true
   with_items: '{{ users }}'
@@ -10,7 +9,6 @@
     label: '{{ user }}'
 
 - name: Create .kube folder for the user
-  become: yes
   become_user: '{{ user }}'
   file:
     path: ~/.kube
@@ -24,7 +22,6 @@
     label: '{{ user }}'
 
 - name: create kubectl config
-  become: yes
   changed_when: true
   shell: microk8s config > /home/{{ user }}/.kube/config
   args:
@@ -49,7 +46,6 @@
     label: '{{ user }}'
 
 - name: add helm repository to user
-  become: yes
   become_user: '{{ item.0 }}'
   shell: "helm repo add {{ item.1.name }} {{ item.1.url }}"
   args:
@@ -61,7 +57,6 @@
   when: microk8s_plugins.helm3
 
 - name: update helm repos
-  become: yes
   become_user: '{{ user }}'
   shell: "helm repo update"
   args:
