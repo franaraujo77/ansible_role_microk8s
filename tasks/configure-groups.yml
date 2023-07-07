@@ -22,7 +22,7 @@
 
 - name: create kubectl config
   changed_when: true
-  shell: microk8s config > /home/{{ ansible_user }}/.kube/config
+  shell: microk8s.config > /home/{{ ansible_user }}/.kube/config
   args:
     executable: /bin/bash
   loop_control:
