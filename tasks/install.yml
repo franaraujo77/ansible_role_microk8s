@@ -36,7 +36,7 @@
   include_tasks: configure-groups.yml
 
 - name: Wait for microk8s to be ready
-  command: microk8s.status --wait-ready
+  command: /snap/bin/microk8s.status --wait-ready
   changed_when: false
   register: mk8sstatusout
   failed_when:
@@ -100,3 +100,9 @@
     content: |
       127.0.0.1 api.snapcraft.io
   when: microk8s_disable_snap_autoupdate
+
+- name: Update local .kube/config file
+  ansible.builtin.fetch:
+    flat: true
+    src: /home/{{ ansible_user }}/.kube/config
+    dest: ~/.kube/config
