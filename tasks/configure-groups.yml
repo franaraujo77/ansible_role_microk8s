@@ -21,7 +21,6 @@
     label: '{{ ansible_user }}'
 
 - name: create kubectl config
-  changed_when: true
   command: "/snap/bin/microk8s.config > /home/{{ ansible_user }}/.kube/config"
   loop_control:
     loop_var: user
