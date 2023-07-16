@@ -26,6 +26,7 @@
   when: uname.stdout | regex_search('raspi')
 
 - name: Add IP address of all hosts to all hosts
+  become: yes
   lineinfile:
     dest: /etc/hosts
     regexp: '.*{{ item }}$'
