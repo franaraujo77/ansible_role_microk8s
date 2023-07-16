@@ -25,6 +25,9 @@
     state: latest
   when: uname.stdout | regex_search('raspi')
 
+- name: configure users
+  include_tasks: configure-groups.yml
+
 - name: Install microk8s
   become: yes
   community.general.snap:
