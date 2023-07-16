@@ -121,9 +121,10 @@
     executable: /bin/bash
 
 - name: Change kubeconfig file permissions
+  become_user: '{{ ansible_user }}'
   file:
-    path: /home/{{ no_become_user }}/.kube/config
-    owner: "{{ no_become_user }}"
+    path: /home/{{ ansible_user }}/.kube/config
+    owner: "{{ ansible_user }}"
     group: microk8s
     mode: '0640'
 
