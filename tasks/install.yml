@@ -116,7 +116,16 @@
 
 - name: create kubectl config
   become_user: '{{ ansible_user }}'
-  command: "/snap/bin/microk8s.config > /home/{{ ansible_user }}/.kube/config"
+  shell: "/snap/bin/microk8s.config > /home/{{ ansible_user }}/.kube/config"
+  args:
+    executable: /bin/bash
+
+- name: Change kubeconfig file permissions
+  file:
+    path: /home/{{ no_become_user }}/.kube/config
+    owner: "{{ no_become_user }}"
+    group: microk8s
+    mode: '0640'
 
 - name: Update local .kube/config file
   ansible.builtin.fetch:
