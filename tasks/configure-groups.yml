@@ -1,6 +1,7 @@
 # add user specific settings
 ---
 - name: Ensure group "microk8s" exists
+  become: yes
   ansible.builtin.group:
     name: microk8s
     state: present
