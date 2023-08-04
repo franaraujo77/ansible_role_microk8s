@@ -6,13 +6,13 @@
     name: microk8s
     state: present
 
-- name: add user to group
+- name: Remove the user 'johnd'
   become: yes
-  command: "usermod -a -G microk8s {{ ansible_user }}"
-  changed_when: true
-  loop_control:
-    loop_var: user
-    label: '{{ ansible_user }}'
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    state: present
+    groups: microk8s
+    append: true
 
 - name: Create .kube folder for the user
   become_user: '{{ ansible_user }}'
