@@ -1,5 +1,10 @@
 # add user specific settings
 ---
+- name: Ensure group "microk8s" exists
+  ansible.builtin.group:
+    name: microk8s
+    state: present
+
 - name: add user to group
   become: yes
   command: "usermod -a -G microk8s {{ ansible_user }}"
